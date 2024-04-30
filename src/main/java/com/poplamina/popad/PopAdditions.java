@@ -5,11 +5,13 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.Component;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.MobCategory;
+import net.minecraft.world.entity.monster.Zombie;
 import net.minecraft.world.food.FoodProperties;
-import net.minecraft.world.item.BlockItem;
-import net.minecraft.world.item.CreativeModeTab;
-import net.minecraft.world.item.CreativeModeTabs;
-import net.minecraft.world.item.Item;
+import net.minecraft.world.item.*;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockBehaviour;
@@ -22,13 +24,11 @@ import net.neoforged.fml.common.Mod;
 import net.neoforged.fml.config.ModConfig;
 import net.neoforged.fml.event.lifecycle.FMLClientSetupEvent;
 import net.neoforged.fml.event.lifecycle.FMLCommonSetupEvent;
+import net.neoforged.neoforge.common.DeferredSpawnEggItem;
 import net.neoforged.neoforge.common.NeoForge;
 import net.neoforged.neoforge.event.BuildCreativeModeTabContentsEvent;
 import net.neoforged.neoforge.event.server.ServerStartingEvent;
-import net.neoforged.neoforge.registries.DeferredBlock;
-import net.neoforged.neoforge.registries.DeferredHolder;
-import net.neoforged.neoforge.registries.DeferredItem;
-import net.neoforged.neoforge.registries.DeferredRegister;
+import net.neoforged.neoforge.registries.*;
 import org.slf4j.Logger;
 
 import java.util.function.Supplier;
@@ -67,6 +67,24 @@ public class PopAdditions
             .alwaysEat().nutrition(9999).saturationMod(2f).build()));
 
 
+    public class PoplaminaEntityType
+    {
+        public static final DeferredRegister<EntityType<?>> ENTITIES = DeferredRegister.create(Registries.ENTITY_TYPE, PopAdditions.MODID);
+        public static final DeferredHolder<EntityType<?>, EntityType<Poplamina_Entity>> POPLAMINA = ENTITIES.register("poplamina", () -> EntityType.Builder.of(Poplamina_Entity::new, MobCategory.MISC).sized(0.6F, 1.90F).setShouldReceiveVelocityUpdates(true).build(PopAdditions.MODID + "poplamina"));
+
+
+        public static class Poplamina_Entity extends Zombie {
+            public Poplamina_Entity(EntityType<? extends Poplamina_Entity> type, Level world) {
+                super(type, world);
+            }
+        }
+    }
+
+
+   public static final DeferredHolder<Item, DeferredSpawnEggItem> POPLAMINA_SPAWN_EGG = ITEMS.register("poplamina_spawn_egg", () -> new DeferredSpawnEggItem(PoplaminaEntityType.POPLAMINA, 5651507, 9804699, new Item.Properties()));
+        // public static InteractionHand getHandWith(LivingEntity livingEntity, Predicate<Item> itemPredicate) {
+        //    return itemPredicate.test(livingEntity.getMainHandItem().getItem()) ? InteractionHand.MAIN_HAND : InteractionHand.OFF_HAND;
+
 
     // Creates a creative tab with the id "examplemod:example_tab" for the example item, that is placed after the combat tab
     public static final DeferredHolder<CreativeModeTab, CreativeModeTab> EXAMPLE_TAB = CREATIVE_MODE_TABS.register("example_tab", () -> CreativeModeTab.builder()
@@ -77,6 +95,7 @@ public class PopAdditions
                 output.accept(EATABLE_POPLAMINA.get());
                 output.accept(POPLAMINA_BLOCK.get());
                 output.accept(COOKED_POPLAMINA.get());
+                //output.accept(POPLAMINA_SPAWN_EGG.get());
                 // Add the example item to the tab. For your own tabs, this method is preferred over the event
             }).build());
 
@@ -100,13 +119,15 @@ public class PopAdditions
         // Register the Deferred Register to the mod event bus so tabs get registered
         CREATIVE_MODE_TABS.register(modEventBus);
 
+        //ENTITIES.register(modEventBus);
+
         // Register ourselves for server and other game events we are interested in.
         // Note that this is necessary if and only if we want *this* class (PopAdditions) to respond directly to events.
         // Do not add this line if there are no @SubscribeEvent-annotated functions in this class, like onServerStarting() below.
         NeoForge.EVENT_BUS.register(this);
 
         // Register the item to a creative tab
-        //modEventBus.addListener(this::addCreative);
+        // modEventBus.addListener(this::addCreative);
 
         // Register our mod's ModConfigSpec so that FML can create and load the config file for us
         ModLoadingContext.get().registerConfig(ModConfig.Type.COMMON, Config.SPEC);
@@ -126,11 +147,11 @@ public class PopAdditions
     }
 
     // Add the example block item to the building blocks tab
-    //private void addCreative(BuildCreativeModeTabContentsEvent event)
-    //{
-    //    if (event.getTabKey() == CreativeModeTabs.BUILDING_BLOCKS)
-    //        event.accept(EXAMPLE_BLOCK_ITEM);
-    //}
+    // private void addCreative(BuildCreativeModeTabContentsEvent event)
+    // {
+    //     if (event.getTabKey() == CreativeModeTabs.BUILDING_BLOCKS)
+    //         event.accept(EXAMPLE_BLOCK_ITEM);
+    // }
 
     // You can use SubscribeEvent and let the Event Bus discover methods to call
     @SubscribeEvent
