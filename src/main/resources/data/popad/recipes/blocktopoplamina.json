@@ -1,0 +1,13 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "food",
+  "ingredients": [
+    {
+      "item": "popad:poplamina_block"
+    }
+  ],
+  "result": {
+    "item": "popad:eatable_poplamina",
+    "count": 9
+  }
+}

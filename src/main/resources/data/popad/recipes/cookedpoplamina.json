@@ -1,0 +1,11 @@
+ {
+    "type": "minecraft:smelting",
+    "category": "food",
+    "ingredient": {
+      "item": "popad:eatable_poplamina"
+    },
+    "result": "popad:cooked_poplamina",
+    "experience": 0.35,
+    "cookingtime": 200
+  }
+  

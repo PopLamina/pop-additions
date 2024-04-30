@@ -1,0 +1,36 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "food",
+  "ingredients": [
+    {
+      "item": "popad:eatable_poplamina"
+    },
+    {
+      "item": "popad:eatable_poplamina"
+    },
+    {
+      "item": "popad:eatable_poplamina"
+    },
+    {
+      "item": "popad:eatable_poplamina"
+    },
+    {
+      "item": "popad:eatable_poplamina"
+    },
+    {
+      "item": "popad:eatable_poplamina"
+    },
+    {
+      "item": "popad:eatable_poplamina"
+    },
+    {
+      "item": "popad:eatable_poplamina"
+    },
+    {
+      "item": "popad:eatable_poplamina"
+    }
+  ],
+  "result": {
+    "item": "popad:poplamina_block"
+  }
+}

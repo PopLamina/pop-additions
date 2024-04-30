@@ -1,0 +1,7 @@
+{
+    "parent": "minecraft:block/cube_all",
+    "textures": {
+		"all": "popad:block/poplamina_block",
+        "particle": "popad:item/eatable_poplamina"
+	}
+}

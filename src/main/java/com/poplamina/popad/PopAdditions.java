@@ -31,6 +31,8 @@ import net.neoforged.neoforge.registries.DeferredItem;
 import net.neoforged.neoforge.registries.DeferredRegister;
 import org.slf4j.Logger;
 
+import java.util.function.Supplier;
+
 // The value here should match an entry in the META-INF/mods.toml file
 @Mod(PopAdditions.MODID)
 public class PopAdditions
@@ -47,22 +49,42 @@ public class PopAdditions
     public static final DeferredRegister<CreativeModeTab> CREATIVE_MODE_TABS = DeferredRegister.create(Registries.CREATIVE_MODE_TAB, MODID);
 
     // Creates a new Block with the id "examplemod:example_block", combining the namespace and path
-    public static final DeferredBlock<Block> EXAMPLE_BLOCK = BLOCKS.registerSimpleBlock("example_block", BlockBehaviour.Properties.of().mapColor(MapColor.STONE));
+    public static final DeferredBlock<Block> POPLAMINA_BLOCK = BLOCKS.register("poplamina_block", () -> new Block(BlockBehaviour.Properties.of()
+            .destroyTime(2.0f)
+            .friction(0.99f)
+            .lightLevel(state -> 7)
+            .destroyTime(0.4f)
+    ));
+    //public static final DeferredBlock<Block> MY_BLOCK = BLOCKS.register("my_block", () -> new Block(...));
     // Creates a new BlockItem with the id "examplemod:example_block", combining the namespace and path
-    public static final DeferredItem<BlockItem> EXAMPLE_BLOCK_ITEM = ITEMS.registerSimpleBlockItem("example_block", EXAMPLE_BLOCK);
+    public static final DeferredItem<BlockItem> POPLAMINA_BLOCK_ITEM = ITEMS.registerSimpleBlockItem("poplamina_block", POPLAMINA_BLOCK);
 
     // Creates a new food item with the id "examplemod:example_id", nutrition 1 and saturation 2
-    public static final DeferredItem<Item> EXAMPLE_ITEM = ITEMS.registerSimpleItem("example_item", new Item.Properties().food(new FoodProperties.Builder()
+    public static final DeferredItem<Item> EATABLE_POPLAMINA = ITEMS.registerSimpleItem("eatable_poplamina", new Item.Properties().food(new FoodProperties.Builder()
             .alwaysEat().nutrition(1).saturationMod(2f).build()));
+
+    public static final DeferredItem<Item> COOKED_POPLAMINA = ITEMS.registerSimpleItem("cooked_poplamina", new Item.Properties().food(new FoodProperties.Builder()
+            .alwaysEat().nutrition(9999).saturationMod(2f).build()));
+
+
 
     // Creates a creative tab with the id "examplemod:example_tab" for the example item, that is placed after the combat tab
     public static final DeferredHolder<CreativeModeTab, CreativeModeTab> EXAMPLE_TAB = CREATIVE_MODE_TABS.register("example_tab", () -> CreativeModeTab.builder()
-            .title(Component.translatable("itemGroup.examplemod")) //The language key for the title of your CreativeModeTab
+            .title(Component.translatable("itemGroup.popad")) //The language key for the title of your CreativeModeTab
             .withTabsBefore(CreativeModeTabs.COMBAT)
-            .icon(() -> EXAMPLE_ITEM.get().getDefaultInstance())
-            .displayItems((parameters, output) -> {
-                output.accept(EXAMPLE_ITEM.get()); // Add the example item to the tab. For your own tabs, this method is preferred over the event
+            .icon(() -> EATABLE_POPLAMINA.get().getDefaultInstance())
+           .displayItems((parameters, output) -> {
+                output.accept(EATABLE_POPLAMINA.get());
+                output.accept(POPLAMINA_BLOCK.get());
+                output.accept(COOKED_POPLAMINA.get());
+                // Add the example item to the tab. For your own tabs, this method is preferred over the event
             }).build());
+
+    //public static final DeferredRegister<Block> BLOCKS = DeferredRegister.create(BuiltInRegistries.BLOCK, PopAdditions.MODID);
+    //public static final DeferredRegister<Item> ITEMS = DeferredRegister.create(BuiltInRegistries.ITEM, PopAdditions.MODID);
+    //public static final DeferredRegister.Items ITEMS = DeferredRegister.createItems(PopAdditions.MODID);
+    //public static final Supplier<Block> POPLAMINA = BLOCKS.register("Poplamina", () -> new Block(BlockBehaviour.Properties.of().mapColor(MapColor.STONE)));
+    //public static final Supplier<Item> POPLAMINA_ITEM = ITEMS.register("Poplamina", () -> new BlockItem(POPLAMINA.get(), new Item.Properties()));
 
     // The constructor for the mod class is the first code that is run when your mod is loaded.
     // FML will recognize some parameter types like IEventBus or ModContainer and pass them in automatically.
@@ -84,7 +106,7 @@ public class PopAdditions
         NeoForge.EVENT_BUS.register(this);
 
         // Register the item to a creative tab
-        modEventBus.addListener(this::addCreative);
+        //modEventBus.addListener(this::addCreative);
 
         // Register our mod's ModConfigSpec so that FML can create and load the config file for us
         ModLoadingContext.get().registerConfig(ModConfig.Type.COMMON, Config.SPEC);
@@ -104,11 +126,11 @@ public class PopAdditions
     }
 
     // Add the example block item to the building blocks tab
-    private void addCreative(BuildCreativeModeTabContentsEvent event)
-    {
-        if (event.getTabKey() == CreativeModeTabs.BUILDING_BLOCKS)
-            event.accept(EXAMPLE_BLOCK_ITEM);
-    }
+    //private void addCreative(BuildCreativeModeTabContentsEvent event)
+    //{
+    //    if (event.getTabKey() == CreativeModeTabs.BUILDING_BLOCKS)
+    //        event.accept(EXAMPLE_BLOCK_ITEM);
+    //}
 
     // You can use SubscribeEvent and let the Event Bus discover methods to call
     @SubscribeEvent
